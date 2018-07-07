@@ -21,7 +21,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import struct
-import formConv
+
+try:
+    import pyximport; pyximport.install()
+    import formConv_cy as formConv
+
+except:
+    import formConv
 
 dx10_formats = ["BC4U", "BC4S", "BC5U", "BC5S", "BC6H_UF16", "BC6H_SF16", "BC7"]
 

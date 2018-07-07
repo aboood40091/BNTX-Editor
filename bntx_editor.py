@@ -482,6 +482,8 @@ class MainWindow(QtWidgets.QWidget):
         self.imgDimComboBox.clear()
         self.comboBox.clear()
 
+        self.resetPreviewer()
+
     def openFile(self):
         self.loaded = False
 
@@ -490,7 +492,12 @@ class MainWindow(QtWidgets.QWidget):
             return False
 
         self.prepareOpenFile(file)
-        if not self.bntx.readFromFile(file):
+        returnCode = self.bntx.readFromFile(file)
+        if returnCode:
+            QtWidgets.QMessageBox.warning(None, "Error", "Error code: %d\nPlease refer to the readme for more information." % returnCode)
+            return False
+
+        else:
             self.fnameLnEdt.setText(self.bntx.name)
             self.targetLnEdt.setText(self.bntx.target)
             self.accessFlagsComboBox.addItems([flag for flag in globals.accessFlags])
