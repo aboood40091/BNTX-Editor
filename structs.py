@@ -168,7 +168,7 @@ class StringTable:
             entriesPos = pos + 8
             self.entries = []
 
-            for i in range(1, self.count + 1):
+            for i in range(self.count + 1):
                 entryPos = entriesPos + 16 * i
 
                 self.entries.append(self.Entry(self.endianness))
@@ -181,13 +181,7 @@ class StringTable:
                 self.count,
             ))
 
-            outBuffer += struct.pack(
-                self.endianness + 'I2Hq',
-                0xFFFFFFFF, 1, 0,
-                self.strTbl.pos + 4,
-            )
-
-            for i in range(self.count):
+            for i in range(self.count + 1):
                 outBuffer += self.entries[i].save(self.strTbl)
 
             return bytes(outBuffer)
