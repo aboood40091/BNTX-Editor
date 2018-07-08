@@ -137,13 +137,17 @@ class StringTable:
             def __init__(self, endianness):
                 self.format = endianness + 'I2Hq'
 
-            def load(self, data, pos, strTbl):
+            def load(self, data, pos, strTbl, isRoot):
                 (self.referenceBit,
                  self.leftIdx,
                  self.rightIdx,
                  self.strTblEntryAddr) = struct.unpack_from(self.format, data, pos)
 
-                self.strIdx = strTbl.index(self.strTblEntryAddr)
+                if isRoot:
+                    self.strIdx = -1
+
+                else:
+                    self.strIdx = strTbl.index(self.strTblEntryAddr)
 
             def save(self, strTbl):
                 return struct.pack(
@@ -172,7 +176,7 @@ class StringTable:
                 entryPos = entriesPos + 16 * i
 
                 self.entries.append(self.Entry(self.endianness))
-                self.entries[-1].load(data, entryPos, self.strTbl)
+                self.entries[-1].load(data, entryPos, self.strTbl, not i)
 
         def save(self):
             outBuffer = bytearray(struct.pack(
@@ -246,7 +250,11 @@ class StringTable:
         raise ValueError("String is not in the string table")
 
     def getPosFromIndex(self, index):
-        return self.entries[index].pos
+        if index == -1:
+            return self.pos + 4
+
+        else:
+            return self.entries[index].pos
 
     def index(self, item):
         if isinstance(item, str):
