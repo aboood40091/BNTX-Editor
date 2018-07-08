@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # BNTX Editor
-# Version 0.2
+# Version 0.3
 # Copyright © 2018 AboodXD
 
 # This file is part of BNTX Editor.
