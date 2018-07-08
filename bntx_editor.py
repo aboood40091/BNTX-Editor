@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # BNTX Editor
-# Version 0.1
+# Version 0.2
 # Copyright © 2018 AboodXD
 
 # This file is part of BNTX Editor.
@@ -33,7 +33,7 @@ if currentRunningVersion < minimum:
 
 import os.path
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QIcon, QPixmap, QImage
 from PyQt5 import QtWidgets
 import time
 import traceback
@@ -91,6 +91,8 @@ class MainWindow(QtWidgets.QWidget):
         self.setupUi()
         self.loaded = False
         self.bntx = BNTX.File()
+
+        self.setWindowIcon(QIcon('icon.ico'))
 
     def setupUi(self):
         self.setWindowTitle("BNTX Editor v%s - By AboodXD" % globals.Version)

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 # BNTX Editor
-# Version 0.1
+# Version 0.2
 # Copyright © 2018 AboodXD
 
 # This file is part of BNTX Editor.
@@ -20,7 +20,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-Version = '0.1'
+Version = '0.2'
 
 formats = {
     0x0101: 'R4_G4_UNORM',
