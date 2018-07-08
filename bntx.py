@@ -415,10 +415,16 @@ class File:
         self.relocTbl.entries[1].structs = [[0x40]]
         self.relocTbl.entries[1].paddingCount = 0
 
-        self.relocTbl.entries.append(self.relocTbl.Entry(self.header.endianness))
-        self.relocTbl.entries[2].pos = 0x198
-        self.relocTbl.entries[2].structs = [[0x198 + i * 8 for i in range(self.texContainer.count)]]
-        self.relocTbl.entries[2].paddingCount = 0
+        pos = 0x198
+        count = self.texContainer.count
+        while count > 0:
+            self.relocTbl.entries.append(self.relocTbl.Entry(self.header.endianness))
+            self.relocTbl.entries[-1].pos = pos
+            self.relocTbl.entries[-1].structs = [[pos + i * 8 for i in range(min(count, 0xFF))]]
+            self.relocTbl.entries[-1].paddingCount = 0
+
+            pos += min(count, 0xFF) * 8
+            count -= 0xFF
 
         self.header.version = 0x40000
         self.header.alignmentShift = 0xC if self.texContainer.target == b'NX  ' else 3
@@ -436,10 +442,16 @@ class File:
         self.texNameDict.pos += len(texNameDictAlignBytes)
         texNameDict = b''.join([texNameDictAlignBytes, self.texNameDict.save()])
 
-        self.relocTbl.entries.append(self.relocTbl.Entry(self.header.endianness))
-        self.relocTbl.entries[3].pos = self.texNameDict.pos + 16
-        self.relocTbl.entries[3].structs = [[self.texNameDict.pos + 16 + i * 8 for i in range(self.texNameDict.count + 1)]]
-        self.relocTbl.entries[3].paddingCount = 0
+        pos = self.texNameDict.pos + 16
+        count = self.texNameDict.count + 1
+        while count > 0:
+            self.relocTbl.entries.append(self.relocTbl.Entry(self.header.endianness))
+            self.relocTbl.entries[-1].pos = pos
+            self.relocTbl.entries[-1].structs = [[pos + i * 8 for i in range(min(count, 0xFF))]]
+            self.relocTbl.entries[-1].paddingCount = 0
+
+            pos += min(count, 0xFF) * 8
+            count -= 0xFF
 
         self.texContainer.dictAddr = self.texNameDict.pos
         self.texContainer.infoPtrsAddr = 0x198
@@ -538,10 +550,16 @@ class File:
         self.relocTbl.entries[-1].paddingCount = 0
 
         for texture in self.textures:
-            self.relocTbl.entries.append(self.relocTbl.Entry(self.header.endianness))
-            self.relocTbl.entries[-1].pos = texture.pos + 0x290
-            self.relocTbl.entries[-1].structs = [[texture.pos + 0x290 + i * 8 for i in range(texture.numMips)]]
-            self.relocTbl.entries[-1].paddingCount = 0
+            pos = texture.pos + 0x290
+            count = texture.numMips
+            while count > 0:
+                self.relocTbl.entries.append(self.relocTbl.Entry(self.header.endianness))
+                self.relocTbl.entries[-1].pos = pos
+                self.relocTbl.entries[-1].structs = [[pos + i * 8 for i in range(min(count, 0xFF))]]
+                self.relocTbl.entries[-1].paddingCount = 0
+
+                pos += min(count, 0xFF) * 8
+                count -= 0xFF
 
         self.relocTbl.blocks[1].relocEntryCount = len(self.relocTbl.entries) - self.relocTbl.blocks[1].relocEntryIdx
 
